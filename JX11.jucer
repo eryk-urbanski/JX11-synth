@@ -14,6 +14,9 @@
       <FILE id="n2zQrG" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="v4ki96" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="abqCy5" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
+      <FILE id="EQzqxx" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
+      <FILE id="aahBTs" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
