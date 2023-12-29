@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-    NoiseGenerator.h
-    Created: 28 Dec 2023 6:18:04pm
-    Author:  User
+    This file contains the basic code for the white noise generation.
 
   ==============================================================================
 */
