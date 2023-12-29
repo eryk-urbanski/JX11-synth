@@ -20,6 +20,7 @@
             file="Source/NoiseGenerator.h"/>
       <FILE id="WmR5qt" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
       <FILE id="aahBTs" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
+      <FILE id="kKXlpk" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
