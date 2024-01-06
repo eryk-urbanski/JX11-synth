@@ -82,7 +82,7 @@ void Synth::noteOn(int note, int velocity)
     float freq = 440.f * std::exp2(float(note - 69) / 12.0f);
 
     voice.osc.amplitude = (velocity / 127.0f) * 0.5f;
-    voice.osc.inc = freq / sampleRate;
+    voice.osc.period = sampleRate / freq;
     voice.osc.reset();
 }
 
