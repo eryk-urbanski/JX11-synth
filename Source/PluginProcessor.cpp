@@ -148,6 +148,26 @@ void JX11AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     splitBufferByEvents(buffer, midiMessages);
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout JX11AudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    layout.add(std::make_unique<juce::AudioParameterChoice>(
+        ParameterID::polyMode,
+        "Polyphony",
+        juce::StringArray{ "Mono", "Poly" },
+        1));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        ParameterID::oscTune,
+        "Osc Tune",
+        juce::NormalisableRange<float>(-24.0f, 24.0f, 1.0f),
+        -12.0f,
+        juce::AudioParameterFloatAttributes().withLabel("semi")));
+
+    return layout;
+}
+
 void JX11AudioProcessor::splitBufferByEvents(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     int bufferOffset = 0;
@@ -203,7 +223,9 @@ bool JX11AudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* JX11AudioProcessor::createEditor()
 {
-    return new JX11AudioProcessorEditor (*this);
+    auto editor = new juce::GenericAudioProcessorEditor(*this);
+    editor->setSize(500, 1050);
+    return editor;
 }
 
 //==============================================================================
