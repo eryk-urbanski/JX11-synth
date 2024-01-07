@@ -17,6 +17,8 @@ class Synth
 public:
     Synth();
 
+    float noiseMix;
+
     void allocateResources(double sampleRate, int samplesPerBlock);
     void deallocateResources();
     void reset();

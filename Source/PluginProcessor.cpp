@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Utils.h"
 
 //==============================================================================
 JX11AudioProcessor::JX11AudioProcessor()
@@ -22,10 +23,39 @@ JX11AudioProcessor::JX11AudioProcessor()
                        )
 #endif
 {
+    castParameter(apvts, ParameterID::oscMix, oscMixParam);
+    castParameter(apvts, ParameterID::oscTune, oscTuneParam);
+    castParameter(apvts, ParameterID::oscFine, oscFineParam);
+    castParameter(apvts, ParameterID::glideMode, glideModeParam);
+    castParameter(apvts, ParameterID::glideRate, glideRateParam);
+    castParameter(apvts, ParameterID::glideBend, glideBendParam);
+    castParameter(apvts, ParameterID::filterFreq, filterFreqParam);
+    castParameter(apvts, ParameterID::filterReso, filterResoParam);
+    castParameter(apvts, ParameterID::filterEnv, filterEnvParam);
+    castParameter(apvts, ParameterID::filterLFO, filterLFOParam);
+    castParameter(apvts, ParameterID::filterVelocity, filterVelocityParam);
+    castParameter(apvts, ParameterID::filterAttack, filterAttackParam);
+    castParameter(apvts, ParameterID::filterDecay, filterDecayParam);
+    castParameter(apvts, ParameterID::filterSustain, filterSustainParam);
+    castParameter(apvts, ParameterID::filterRelease, filterReleaseParam);
+    castParameter(apvts, ParameterID::envAttack, envAttackParam);
+    castParameter(apvts, ParameterID::envDecay, envDecayParam);
+    castParameter(apvts, ParameterID::envSustain, envSustainParam);
+    castParameter(apvts, ParameterID::envRelease, envReleaseParam);
+    castParameter(apvts, ParameterID::lfoRate, lfoRateParam);
+    castParameter(apvts, ParameterID::vibrato, vibratoParam);
+    castParameter(apvts, ParameterID::noise, noiseParam);
+    castParameter(apvts, ParameterID::octave, octaveParam);
+    castParameter(apvts, ParameterID::tuning, tuningParam);
+    castParameter(apvts, ParameterID::outputLevel, outputLevelParam);
+    castParameter(apvts, ParameterID::polyMode, polyModeParam);
+
+    apvts.state.addListener(this);
 }
 
 JX11AudioProcessor::~JX11AudioProcessor()
 {
+    apvts.state.removeListener(this);
 }
 
 //==============================================================================
@@ -94,6 +124,7 @@ void JX11AudioProcessor::changeProgramName (int index, const juce::String& newNa
 void JX11AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     synth.allocateResources(sampleRate, samplesPerBlock);
+    parametersChanged.store(true);
     reset();
 }
 
@@ -144,6 +175,13 @@ void JX11AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // guaranteed to be empty - they may contain garbage).
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
+
+    // Thread-safe check whether parametersChanged is true
+    // and if so calls update() and sets parametersChanged back to false.
+    bool expected = true;
+    if (parametersChanged.compare_exchange_strong(expected, false)) {
+        update();
+    }
 
     splitBufferByEvents(buffer, midiMessages);
 }
@@ -418,6 +456,13 @@ void JX11AudioProcessor::render(
     synth.render(outputBuffers, sampleCount);
 }
 
+void JX11AudioProcessor::update()
+{
+    float noiseMix = noiseParam->get() / 100.0f;
+    noiseMix *= noiseMix;
+    synth.noiseMix = noiseMix * 0.06f;
+}
+
 //==============================================================================
 bool JX11AudioProcessor::hasEditor() const
 {
@@ -434,15 +479,16 @@ juce::AudioProcessorEditor* JX11AudioProcessor::createEditor()
 //==============================================================================
 void JX11AudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    copyXmlToBinary(*apvts.copyState().createXml(), destData);
 }
 
 void JX11AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary(data, sizeInBytes));
+    if (xml.get() != nullptr && xml->hasTagName(apvts.state.getType())) {
+        apvts.replaceState(juce::ValueTree::fromXml(*xml));
+        parametersChanged.store(true);
+    }
 }
 
 //==============================================================================
