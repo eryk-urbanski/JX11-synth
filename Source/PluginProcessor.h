@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "Synth.h"
+#include "Preset.h"
 
 namespace ParameterID
 {
@@ -106,7 +107,10 @@ private:
     void handleMIDI(uint8_t data0, uint8_t data1, uint8_t data2);
     void render(juce::AudioBuffer<float>& buffer, int sampleCount, int bufferOffset);
     void update();
+    void createPrograms();
 
+    std::vector<Preset> presets;
+    int currentProgram;
     Synth synth;
 
     juce::AudioParameterFloat* oscMixParam;

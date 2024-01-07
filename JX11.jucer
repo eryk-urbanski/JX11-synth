@@ -16,6 +16,7 @@
       <FILE id="v4ki96" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="abqCy5" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
       <FILE id="EQzqxx" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
+      <FILE id="KNKgQn" name="Preset.h" compile="0" resource="0" file="Source/Preset.h"/>
       <FILE id="Up8g5t" name="NoiseGenerator.h" compile="0" resource="0"
             file="Source/NoiseGenerator.h"/>
       <FILE id="WmR5qt" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
