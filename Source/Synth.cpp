@@ -39,14 +39,18 @@ void Synth::render(float** outputBuffers, int sampleCount)
         float noise = noiseGen.nextValue() * noiseMix;
 
         float output = 0.0f;
-        if (voice.note > 0) {
-            output = voice.render() + noise;
+        if (voice.env.isActive()) {
+            output = voice.render(noise);
         }
 
         outputBufferLeft[sample] = output;
         if (outputBufferRight != nullptr) {
             outputBufferRight[sample] = output;
         }
+    }
+
+    if (!voice.env.isActive()) {
+        voice.env.reset();
     }
 
     protectYourEars(outputBufferLeft, sampleCount);
@@ -84,11 +88,18 @@ void Synth::noteOn(int note, int velocity)
     voice.osc.amplitude = (velocity / 127.0f) * 0.5f;
     voice.osc.period = sampleRate / freq;
     voice.osc.reset();
+
+    Envelope& env = voice.env;
+    env.attackMultiplier = envAttack;
+    env.decayMultiplier = envDecay;
+    env.sustainLevel = envSustain;
+    env.releaseMultiplier = envRelease;
+    env.attack();
 }
 
 void Synth::noteOff(int note)
 {
     if (voice.note == note) {
-        voice.note = 0;
+        voice.release();
     }
 }

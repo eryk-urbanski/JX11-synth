@@ -20,6 +20,7 @@
       <FILE id="Up8g5t" name="NoiseGenerator.h" compile="0" resource="0"
             file="Source/NoiseGenerator.h"/>
       <FILE id="WmR5qt" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
+      <FILE id="gpIl93" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
       <FILE id="aahBTs" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
       <FILE id="kKXlpk" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
     </GROUP>
