@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    This file contains the presets for the synthesizer.
+    This file contains the preset struct for the synthesizer.
 
   ==============================================================================
 */
