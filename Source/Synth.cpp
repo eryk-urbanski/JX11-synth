@@ -85,9 +85,13 @@ void Synth::noteOn(int note, int velocity)
     
     float freq = 440.f * std::exp2(float(note - 69) / 12.0f);
 
-    voice.osc.amplitude = (velocity / 127.0f) * 0.5f;
-    voice.osc.period = sampleRate / freq;
-    voice.osc.reset();
+    // activate the first oscillator
+    voice.osc1.amplitude = (velocity / 127.0f) * 0.5f;
+    voice.osc1.period = sampleRate / freq;
+
+    // activate the second oscillator
+    voice.osc2.amplitude = voice.osc1.amplitude * oscMix;
+    voice.osc2.period = voice.osc1.period * 0.994f;
 
     Envelope& env = voice.env;
     env.attackMultiplier = envAttack;

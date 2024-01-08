@@ -18,6 +18,7 @@ public:
     Synth();
 
     float noiseMix;
+    float oscMix;
     float envAttack, envDecay, envSustain, envRelease;
 
     void allocateResources(double sampleRate, int samplesPerBlock);
