@@ -20,6 +20,7 @@ public:
     float noiseMix;
     float oscMix;
     float envAttack, envDecay, envSustain, envRelease;
+    float detune;
 
     void allocateResources(double sampleRate, int samplesPerBlock);
     void deallocateResources();
