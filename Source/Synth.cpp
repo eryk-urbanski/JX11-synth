@@ -42,14 +42,21 @@ void Synth::render(float** outputBuffers, int sampleCount)
     for (int sample = 0; sample < sampleCount; ++sample) {
         float noise = noiseGen.nextValue() * noiseMix;
 
-        float output = 0.0f;
+        float outputLeft = 0.0f;
+        float outputRight = 0.0f;
+
         if (voice.env.isActive()) {
-            output = voice.render(noise);
+            float output = voice.render(noise);
+            outputLeft += output * voice.panLeft;
+            outputRight += output * voice.panRight;
         }
 
-        outputBufferLeft[sample] = output;
         if (outputBufferRight != nullptr) {
-            outputBufferRight[sample] = output;
+            outputBufferLeft[sample] = outputLeft;
+            outputBufferRight[sample] = outputRight;
+        }
+        else {
+            outputBufferLeft[sample] = (outputLeft + outputRight) * 0.5f;
         }
     }
 
@@ -91,6 +98,7 @@ void Synth::midiMessage(uint8_t data0, uint8_t data1, uint8_t data2)
 void Synth::noteOn(int note, int velocity)
 {
     voice.note = note;
+    voice.updatePanning();
         
     float period = calcPeriod(note);
     voice.period = period;
