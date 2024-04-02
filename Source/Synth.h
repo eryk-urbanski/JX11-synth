@@ -21,6 +21,7 @@ public:
     float oscMix;
     float envAttack, envDecay, envSustain, envRelease;
     float detune;
+    float tune;
 
     void allocateResources(double sampleRate, int samplesPerBlock);
     void deallocateResources();

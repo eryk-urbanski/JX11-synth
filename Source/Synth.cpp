@@ -86,7 +86,7 @@ void Synth::noteOn(int note, int velocity)
 {
     voice.note = note;
     
-    float freq = 440.f * std::exp2(float(note - 69) / 12.0f);
+    float freq = 440.f * std::exp2((float(note - 69) + tune) / 12.0f);
     
     voice.period = sampleRate / freq;
 
